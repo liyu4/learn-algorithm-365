@@ -15,11 +15,11 @@ func merge(left, right []int) {
 		{
 			if p >= len(left) {
 				arr[i] = right[q]
-				j++
+				q = q + 1
 				continue
 			} else if q >= len(right) {
 				arr[i] = left[p]
-				i++
+				p = p + 1
 				continue
 			}
 		}
