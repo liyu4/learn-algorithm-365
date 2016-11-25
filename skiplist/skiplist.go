@@ -133,3 +133,44 @@ func search(l *listStructure, key int) int {
 		return -1
 	}
 }
+
+func delete(l *listStructure, key int) bool {
+	var (
+		k, m   int
+		update [MAX_NUMBER_OF_LEVELS]*nodeStructure
+		p, q   *nodeStructure
+	)
+
+	p = l.header
+	k = l.level
+	m = l.level
+
+	for ; k >= 0; k-- {
+		q = p.forward[k]
+		for q != nil && q.key < key {
+			p = q
+			q = p.forward[k]
+		}
+		// 寻找的路径，稍微有点冗余
+		update[k] = p
+	}
+
+	if q != nil && q.key == key {
+		for k = 0; k <= m && update[k].forward[k] == q; k++ {
+			// 从底层开始维护新的关系
+			p = update[k]
+			//  维护链表的方向关系
+			p.forward[k] = q.forward[k]
+		}
+
+		// 如果删除的是最高层的，跳表的高度也开始跟着调整
+		for l.header.forward[m] == nil && m > 0 {
+			m--
+		}
+
+		l.level = m
+		return true
+	} else {
+		return false
+	}
+}
