@@ -18,4 +18,12 @@ func TestSkiplistInsert(t *testing.T) {
 			t.Log(v.value)
 		}
 	}
+
+	ret := search(l, 20)
+
+	if ret != -1 {
+		t.Log(ret)
+	} else {
+		t.Failed()
+	}
 }
