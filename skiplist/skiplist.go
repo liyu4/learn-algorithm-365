@@ -105,3 +105,31 @@ func insert(l *listStructure, key, value int) bool {
 	//跳表的插入工作完成
 	return true
 }
+
+func search(l *listStructure, key int) int {
+	var (
+		p, q *nodeStructure
+		k    int
+	)
+
+	p = l.header
+	k = l.level
+
+	for ; k >= 0; k-- {
+		q = p.forward[k]
+		for q != nil && q.key < key {
+			q = q.forward[k]
+		}
+
+		if q != nil && q.key == key {
+			return q.value
+		}
+	}
+
+	//当为空跳表的时候就返回-1，表示没有找到对应的元素
+	if q != nil && q.key == key {
+		return q.value
+	} else {
+		return -1
+	}
+}
