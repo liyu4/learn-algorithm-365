@@ -4,7 +4,7 @@ package sort
 //然后将大于这个数的数放在右边，将小于这个数的数放在左边
 //最后递归调用这个过程
 func quick_sort(arr []int, start, lenght int) []int {
-	//显然如果剩下一个元素的时候就不需要排序了。
+	//如果剩下一个元素的时候显然就不需要排序了。
 	if lenght-1 > start {
 		i := start
 		j := lenght - 1
@@ -31,10 +31,10 @@ func quick_sort(arr []int, start, lenght int) []int {
 
 			//将找到的第一个比x大的值填入之前空白的地方，也就是比x小的那个值的地方
 			if i < j {
-				arr[j-1] = arr[i]
+				arr[j] = arr[i]
+				j--
 			}
 		}
-
 		arr[i] = x
 
 		quick_sort(arr, start, i-1)
