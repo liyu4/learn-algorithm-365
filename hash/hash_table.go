@@ -51,3 +51,32 @@ func (h *Hashtable) lookup(key string) *Node {
 	}
 	return nil
 }
+
+func (h *Hashtable) Get(key string) string {
+	np := h.lookup(key)
+
+	if np != nil {
+		return np.value
+	}
+	return ""
+}
+
+func (h *Hashtable) Put(key, value string) int {
+	var (
+		hk uint
+		np *Node
+	)
+	np = h.lookup(key)
+
+	//如果这个key没有被插入，那么执行插入操作
+	if np == nil {
+		hk = h.hash(key)
+		// 实例化np
+		np = &Node{}
+		np.key = key
+		np.next = h.header[hk]
+		h.header[hk] = np
+	}
+	np.value = value
+	return 1
+}

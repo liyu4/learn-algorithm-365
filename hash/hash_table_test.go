@@ -5,10 +5,14 @@ import (
 )
 
 func TestHash(t *testing.T) {
+
 	hash := New()
 
-	t.Log(hash)
+	hash.Put("heloo", "word")
 
-	h := Hash("hellooo")
-	t.Log(h)
+	hash.Put("hello", "word2")
+
+	what := hash.Get("hello")
+
+	t.Log(what)
 }
