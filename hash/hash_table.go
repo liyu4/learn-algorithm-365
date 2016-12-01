@@ -12,13 +12,13 @@ type Node struct {
 	next  *Node
 }
 
-type hashtable struct {
+type Hashtable struct {
 	header []*Node
 }
 
-func New() *hashtable {
+func New() *Hashtable {
 
-	h := &hashtable{}
+	h := &Hashtable{}
 	h.header = make([]*Node, HASHSIZE)
 
 	for i := 0; i < HASHSIZE; i++ {
@@ -27,6 +27,27 @@ func New() *hashtable {
 	return h
 }
 
-func hash(key string) {
+// Hash is hash function
+func (h *Hashtable) hash(key string) uint {
+	var hk uint
 
+	ascii := []byte(key)
+
+	for _, v := range ascii {
+		hk = uint(v) + hk*31
+	}
+	return hk % HASHSIZE
+}
+
+func (h *Hashtable) lookup(key string) *Node {
+	hk := h.hash(key)
+
+	np := h.header[hk]
+
+	for ; np != nil; np = np.next {
+		if np.key == key {
+			return np
+		}
+	}
+	return nil
 }
