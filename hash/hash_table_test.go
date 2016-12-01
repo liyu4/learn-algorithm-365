@@ -8,11 +8,13 @@ func TestHash(t *testing.T) {
 
 	hash := New()
 
-	hash.Put("heloo", "word")
+	var keys = []string{"name", "address", "phone", "k101", "k110"}
+	var values = []string{"Sourav", "Sinagor", "26300788", "Value1", "Value2"}
 
-	hash.Put("hello", "word2")
+	for i := 0; i < 5; i++ {
+		hash.Put(keys[i], values[i])
+	}
 
-	what := hash.Get("hello")
+	hash.display()
 
-	t.Log(what)
 }

@@ -1,6 +1,8 @@
 package hash
 
-import ()
+import (
+	"fmt"
+)
 
 const (
 	HASHSIZE = 101
@@ -45,6 +47,7 @@ func (h *Hashtable) lookup(key string) *Node {
 	np := h.header[hk]
 
 	for ; np != nil; np = np.next {
+		//冲突指的是key不同但是hash到了相同的slot上
 		if np.key == key {
 			return np
 		}
@@ -68,15 +71,34 @@ func (h *Hashtable) Put(key, value string) int {
 	)
 	np = h.lookup(key)
 
-	//如果这个key没有被插入，那么执行插入操作
+	//如果这个key没有被插入，那么执行插入操作,当然冲突的元素也会扔进来。
 	if np == nil {
 		hk = h.hash(key)
 		// 实例化np
 		np = &Node{}
 		np.key = key
+
+		// 先前的元素往后移动了
 		np.next = h.header[hk]
 		h.header[hk] = np
 	}
 	np.value = value
 	return 1
+}
+
+// 下面是一个漂亮的但是无用的调试函数
+func (h *Hashtable) display() {
+	var i int
+	var t *Node
+	for i = 0; i < HASHSIZE; i++ {
+		t = h.header[i]
+		if t == nil {
+			continue
+		} else {
+			for ; t != nil; t = t.next {
+				fmt.Printf("key is: %s,value is: %s", t.key, t.value)
+				fmt.Println()
+			}
+		}
+	}
 }
