@@ -2,7 +2,7 @@ package sort
 
 import ()
 
-func merge(left, right []int) {
+func merge(left, right []int) []int {
 	arr := make([]int, len(left)+len(right))
 
 	// index p for left, q for right
@@ -33,6 +33,7 @@ func merge(left, right []int) {
 			p = p + 1
 		}
 	}
+	return arr
 }
 
 func sort(array []int) []int {
