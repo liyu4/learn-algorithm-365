@@ -1,11 +1,14 @@
 package sort
 
-import ()
+import (
+	"errors"
+)
 
 // 参考算法导论的实现
 // 第一步将数组中的元素堆化
 func max_heapify(arr []int, position int) {
 	heapsize := len(arr) - 1
+
 	largest := position
 	//假设现在position为0，也就是说从数组的第一个元素开始，我们开始堆化的过程，就是把一个数据转换成堆（近似于完全二叉树）
 	//根据以下的代码我们其实很容易的知道，堆化的结果是一个最大堆
@@ -48,4 +51,56 @@ func heap_sort(arr []int) {
 		// 说明一下：最大的元素和最后的元素互换，最大堆的性质极有可能已经被破坏，所以要重新维护
 		max_heapify(arr[:i-1], 0)
 	}
+}
+
+/*
+  这部分实现一个最大优先队列
+*/
+
+func heap_maximum(arr []int) int {
+	return arr[0]
+}
+
+func heap_extract_max(arr []int) (int, []int, error) {
+	heapsize := len(arr) - 1
+
+	if heapsize < 0 {
+		//下溢
+		return -1, nil, errors.New("heap underflow")
+	}
+
+	max := arr[0]
+	arr[0] = arr[heapsize]
+
+	if heapsize == 0 {
+		arr = arr[:0:0]
+		return max, nil, nil
+	}
+
+	arr = arr[:heapsize-1]
+	max_heapify(arr, 0)
+	return max, arr, nil
+}
+
+func heap_increase_key(arr []int, i, key int) error {
+	if key < arr[i] {
+		return errors.New("new key is small than current key")
+	}
+
+	arr[i] = key
+
+	for i > 0 && arr[i/2] < arr[i] {
+		arr[i], arr[i/2] = arr[i/2], arr[i]
+		i = i / 2
+	}
+	return nil
+}
+
+func max_heap_insert(arr []int, key int) []int {
+	newarr := make([]int, len(arr)+1)
+	copy(newarr, arr)
+
+	newarr[len(arr)-1] = -10000000000
+	heap_increase_key(newarr, len(newarr)-1, key)
+	return newarr
 }
