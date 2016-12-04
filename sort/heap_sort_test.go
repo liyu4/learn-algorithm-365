@@ -9,4 +9,20 @@ func TestHeapsort(t *testing.T) {
 	heap_sort(arr)
 
 	t.Log(arr)
+
+	arr2 := []int{2, 3, 2, 5, 333, 5}
+
+	build_max_heap(arr2)
+
+	// newarr := max_heap_insert(arr2, 100)
+	// t.Log(newarr)
+
+	max, result, err := heap_extract_max(arr2)
+
+	if err != nil {
+		t.Log(err)
+	}
+
+	t.Log(max)
+	t.Log(result)
 }
