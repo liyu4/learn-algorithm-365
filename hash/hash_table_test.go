@@ -16,5 +16,4 @@ func TestHash(t *testing.T) {
 	}
 
 	hash.display()
-
 }
