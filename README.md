@@ -4,6 +4,7 @@
 2. The quick sort has benn come true. date: 2016-11-30 in shanghai
 3. The insert sort has bee come true.  date: 2016-11-30 in shanghai
 4. The hash table has been come true. date: 2016-12-1 in shanghai
+5. The heap sort and priority queue has been come true. date: 2016-12-4 in shanghai
 
 ##contact
 wechat: converxy
