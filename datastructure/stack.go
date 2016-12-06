@@ -29,15 +29,16 @@ func (s *stack) pop() (int, error) {
 	topsize := len(s.arr)
 	if s.empty() {
 		return -1, errors.New("underflow")
-	} else {
-		if topsize == 1 {
-			top = s.arr[topsize-1]
-			s.clean()
-		} else {
-			top = s.arr[topsize-1]
-			s.arr = s.arr[:topsize-1]
-		}
 	}
+
+	if topsize == 1 {
+		top = s.arr[topsize-1]
+		s.clean()
+	} else {
+		top = s.arr[topsize-1]
+		s.arr = s.arr[:topsize-1]
+	}
+
 	return top, nil
 }
 
