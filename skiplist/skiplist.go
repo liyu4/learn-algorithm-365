@@ -1,3 +1,5 @@
+//package skiplist provide skip list that is a data structure that allows fast search within an ordered
+//sequence of element
 package skiplist
 
 import (
