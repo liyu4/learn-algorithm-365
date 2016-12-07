@@ -1,5 +1,9 @@
 package datastructure
 
+import (
+	"fmt"
+)
+
 type Node struct {
 	Value int
 }
@@ -28,10 +32,16 @@ func (q *Queue) push(n *Node) {
 		copy(nodes, q.nodes[q.head:])
 		copy(nodes[len(q.nodes)-q.head:], q.nodes[:q.head])
 		q.head = 0
+		// second
+		// update the tail of the queue
 		q.tail = len(q.nodes)
 		q.nodes = nodes
 	}
+
+	// we need to think the first case.
 	q.nodes[q.tail] = n
+
+	// len(q.nodes) == size
 	q.tail = (q.tail + 1) % len(q.nodes)
 	q.count++
 }
