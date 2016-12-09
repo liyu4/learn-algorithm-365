@@ -76,7 +76,6 @@ func insert(l *listStructure, key, value int) bool {
 	//这一步的意义是不插入重复的元素
 	if q != nil && q.key == key {
 		//更新同一位置的数据
-		//也许这里存在一个bug，稍后测试看是否需要和前后的值比较，确保链表是有序的
 		q.value = value
 		return false
 	}
