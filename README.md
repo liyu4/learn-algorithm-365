@@ -6,7 +6,10 @@
 4. The hash table has been come true. date: 2016-12-1 in shanghai
 5. The heap sort and priority queue has been come true. date: 2016-12-4 in shanghai
 6. The stack and queue has been come true. date: 2016-12-6 in shanghai
+7. The real queue that is based on a circular slice has come true  date: 2016-12-9 in shanghai
+8. Fixed tiny bug in skip list but there are have some bug in random number date: 2016-12-9 in shanghai
 
 ##contact
-wechat: converxy
-email: liyu7771@gamil.com
+Wechat: converxy
+QQ: 2698380951
+Email: liyu7771@gamil.com
