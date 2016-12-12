@@ -11,6 +11,15 @@ func TestDoubleListI(t *testing.T) {
 
 	dlist.Insert(Value{"dylan"})
 
-	t.Log(*dlist.head)
-	t.Log(*dlist.tail)
+	n := dlist.Search("light")
+	t.Log(n.Name)
+
+	dlist.Insert(Value{"hi"})
+	success := dlist.Delete("hi")
+
+	n = dlist.Search("hi")
+	t.Log(n)
+
+	t.Log(success)
+
 }
