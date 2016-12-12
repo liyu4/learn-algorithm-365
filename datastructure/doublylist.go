@@ -1,7 +1,8 @@
 package datastructure
 
 import (
-	"errors"
+	// "errors"
+	"fmt"
 )
 
 type Value struct {
@@ -40,10 +41,15 @@ func (d *doublelist) Insert(v Value) {
 
 	if d.head == nil {
 		// 第一个节点数据
-		d.head == node
+		d.head = node
 	} else {
+		// 指针指向同一块区域
 		d.tail.next = node
+		// 新加入节点的指针指向上一个元素
+		// d.tail == d.head  因为它们都指向同一个address
 		node.prev = d.tail
 	}
+	//替换掉tail的值, 新tail就为node的值，d.tail.prev== head
+	// d.tail.next == nil
 	d.tail = node
 }
