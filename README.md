@@ -8,6 +8,14 @@
 6. The stack and queue has been come true. date: 2016-12-6 in shanghai
 7. The real queue that is based on a circular slice has come true  date: 2016-12-9 in shanghai
 8. Fixed tiny bug in skip list but there are have some bug in random number date: 2016-12-9 in shanghai
+9. The double list has been come true. date: 2016-12-12 in shanghai
+
+
+### how to test?
+you can test specified file use below command
+```
+go test -v  yourfile.go youfile_test.go
+```
 
 ##contact
 Wechat: converxy
