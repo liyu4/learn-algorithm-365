@@ -1,7 +1,7 @@
 package datastructure
 
 import (
-	// "errors"
+	"errors"
 	"fmt"
 )
 
@@ -52,4 +52,56 @@ func (d *doublelist) Insert(v Value) {
 	//替换掉tail的值, 新tail就为node的值，d.tail.prev== head
 	// d.tail.next == nil
 	d.tail = node
+}
+
+func (d *doublelist) Search(name string) *Node {
+	var (
+		found bool  = false
+		ret   *Node = nil
+	)
+
+	for n := d.First(); n != nil && !found; n = n.next {
+		if n.Value.Name == name {
+			found = true
+			ret = n
+		}
+	}
+	return ret
+}
+
+func (d *doublelist) Delete(name string) bool {
+	var (
+		success bool = false
+		nodedel      = d.Search(name)
+	)
+	fmt.Println(nodedel)
+
+	if nodedel != nil {
+		prev := nodedel.prev
+		next := nodedel.next
+
+		// 此种情况是判断删除最后一个元素
+		if next == nil {
+			prev.next = next
+			success = true
+		} else {
+			prev.next, next.prev = next, prev
+			success = true
+		}
+	}
+	return success
+}
+
+// 移除最后一个元素。
+func (d *doublelist) Remove() (v Value, err error) {
+	if d.tail == nil {
+		err = errors.New("Double list is empty")
+	} else {
+		v = d.tail.Value
+		d.tail = d.tail.prev
+		if d.tail == nil {
+			d.head = nil
+		}
+	}
+	return v, err
 }
