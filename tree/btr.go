@@ -92,3 +92,32 @@ func (b *Bst) tree_maximum(tree *Node) *Node {
 	}
 	return tree
 }
+
+// 后继
+func (b *Bst) tree_successor(tree *Node) *Node {
+	if tree.right != nil {
+		return b.tree_minimum(tree.right)
+	}
+
+	y := tree.parent
+
+	for y != nil && tree == y.right {
+		tree = y
+		y = y.p
+	}
+	return y
+}
+
+func (b *Bst) tree_predecessor(tree *Node) *Node {
+	if tree.left != nil {
+		return b.tree_maximum(tree.left)
+	}
+
+	y := tree.parent
+
+	for y != nil && tree == y.right {
+		tree = y
+		y = y.p
+	}
+	return y
+}
