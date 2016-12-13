@@ -78,7 +78,7 @@ func (b *Bst) iterative_tree_search(tree *Node, element interface{}) *Node {
 }
 
 // 最小关键元素
-func (b *Bst) tree_minimm(tree *Node) *Node {
+func (b *Bst) tree_minimum(tree *Node) *Node {
 	for tree != nil {
 		tree = tree.left
 	}
