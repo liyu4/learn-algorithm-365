@@ -76,3 +76,19 @@ func (b *Bst) iterative_tree_search(tree *Node, element interface{}) *Node {
 	}
 	return tree
 }
+
+// 最小关键元素
+func (b *Bst) tree_minimm(tree *Node) *Node {
+	for tree != nil {
+		tree = tree.left
+	}
+	return tree
+}
+
+// 最大关键元素, 显然最大关键元素和最小关键元素都是由二叉树的性质决定的，并且它们的代码也是对称的。
+func (b *Bst) tree_maximum(tree *Node) *Node {
+	for tree != nil {
+		tree = tree.right
+	}
+	return tree
+}
