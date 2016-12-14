@@ -129,7 +129,7 @@ func (b *Bst) tree_insert(tree *Node, element interface{}) *Node {
 	for tree != nil {
 		// y为双亲节点
 		y = tree
-		// 1 < 2 为真则走左， 为假则走右
+		// 举例子n1 < n2 为真则走左， 为假则走右
 		if b.compare(element, tree.element) {
 			tree = tree.left
 		} else {
