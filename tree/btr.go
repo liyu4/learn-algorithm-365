@@ -103,11 +103,12 @@ func (b *Bst) tree_successor(tree *Node) *Node {
 
 	for y != nil && tree == y.right {
 		tree = y
-		y = y.p
+		y = y.parent
 	}
 	return y
 }
 
+// 前继
 func (b *Bst) tree_predecessor(tree *Node) *Node {
 	if tree.left != nil {
 		return b.tree_maximum(tree.left)
@@ -117,7 +118,39 @@ func (b *Bst) tree_predecessor(tree *Node) *Node {
 
 	for y != nil && tree == y.right {
 		tree = y
-		y = y.p
+		y = y.parent
+	}
+	return y
+}
+
+// 插入
+func (b *Bst) tree_insert(tree *Node, element interface{}) *Node {
+	y := &Node{}
+	for tree != nil {
+		// y为双亲节点
+		y = tree
+		// 1 < 2 为真则走左， 为假则走右
+		if b.compare(element, tree.element) {
+			tree = tree.left
+		} else {
+			tree = tree.right
+		}
+	}
+
+	var node *Node = &Node{element, nil, nil}
+	node.parent = y
+
+	// 说明是一颗空二叉搜索树
+	if y == nil {
+		b.root = node
+		return node
+	}
+
+	// 寻找左边还是右边需要插入
+	if b.compare(element, y.element) {
+		y.left = node
+	} else {
+		y.right = node
 	}
 	return y
 }
