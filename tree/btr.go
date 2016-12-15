@@ -154,3 +154,54 @@ func (b *Bst) tree_insert(tree *Node, element interface{}) *Node {
 	}
 	return y
 }
+
+// 转移, 用一棵子树替换一棵子树并成为其双亲的孩子结点。
+func (b *Bst) transplant(to, from *Node) {
+	// 如果to 没有双亲则代表to就是这棵树的根
+	if to.parent == nil {
+		b.root = from
+		// to是否是双亲的左子树
+	} else if to == to.parent.left {
+		// 否则to的双亲节点的左子树就用from代替
+		to.parent.left = from
+	} else {
+		// 否则to的双亲节点的右子树就用from代替
+		to.parent.right = from
+	}
+
+	// 允许from为空
+	if from != nil {
+		from.parent = to.parent
+	}
+}
+
+// 删除
+func (b *Bst) tree_delete(tree *Node, element interface{}) *Node {
+	// 寻找当前节点的位置
+	target := b.tree_search(tree, element)
+
+	// 如果target的左子树为空
+	if target.left == nil {
+		b.transplant(target, target.right)
+	} else if target.right == nil {
+		b.transplant(target, target.left)
+	} else {
+		// target的后继元素，同时这里是处理target的左右子树都非空，所以情况稍微复杂一点
+		// 啰嗦一点y就是后继元素
+		y := b.tree_minimum(target.right)
+		if y.parent != target {
+			// 更新后继节点右子树的位置
+			b.transplant(y, y.right)
+			// 更新后继节点的位置
+			y.right = target.right
+			y.right.parent = y
+		}
+
+		// 如果y是target的右孩子，那么用y替换target，并且留下y的右孩子
+		// 更新这棵树的左右情况
+		b.transplant(target, y)
+		y.left = target.left
+		y.left.parent = y
+	}
+	return tree
+}
