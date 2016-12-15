@@ -18,7 +18,7 @@ go test -v  yourfile.go youfile_test.go
 ```
 
 ##contact
-Wechat: converxy
+Wechat: convertxy
 
 QQ: 2698380951
 
