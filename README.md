@@ -9,6 +9,7 @@
 7. The real queue that is based on a circular slice has come true  date: 2016-12-9 in shanghai
 8. Fixed tiny bug in skip list but there are have some bug in random number date: 2016-12-9 in shanghai
 9. The double list has been come true. date: 2016-12-12 in shanghai
+1O. The binary search tree has been come true. date 2016-12-15 in shanghai. today is so cold!
 
 
 ### how to test?
