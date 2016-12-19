@@ -1,4 +1,4 @@
-// tree provides implement of binary search trees
+// tree provides an implement of binary search trees
 package tree
 
 import (
