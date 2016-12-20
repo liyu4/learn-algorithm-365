@@ -80,5 +80,25 @@ func (r *Rbtree) left_rotate(node *RBNode) {
 }
 
 func (r *Rbtree) right_rotate(node *RBNode) {
+	var temp *RBNode
 
+	temp = node.left
+	// temp的右孩子变成node的左孩子
+	node.left = temp.right
+
+	// 更新temp的双亲节点
+	temp.parent = node.parent
+
+	{
+		if node.parent == r.sentinel {
+			r.root = temp
+		} else if node.parent.left == node {
+			node.parent.left = temp
+		} else {
+			node.parent.right = temp
+		}
+	}
+
+	temp.right = node
+	node.parent = temp
 }
