@@ -102,3 +102,95 @@ func (r *Rbtree) right_rotate(node *RBNode) {
 	temp.right = node
 	node.parent = temp
 }
+
+func (r *Rbtree) rb_insert(element interface{}) *RBNode {
+	var (
+		insertnode RBNode
+		node       = &insertnode
+	)
+
+	node.data = element
+
+	// 新增节点的左右子树都是哨兵节点
+	node.left = r.sentinel
+	node.right = r.sentinel
+	// 新插入节点的颜色应该标记为红色，如果为黑色则不能维护红黑树的性质\
+	node.color = RED
+
+	// 插入第一个节点，也就是说这是一种最简单和明了的case
+	if r.root == r.sentinel {
+		node.parent = nil
+		// 根节点一点为黑色
+		node.color = BLACK
+		r.root = node
+		// 插入成功返回
+		return node
+	}
+
+	curpos := tree.root
+	for {
+		if curpos.key > node.key {
+			if curpos.left == tree.sentinel {
+				curpos.left = node
+				node.parent = curpos
+				break
+			} else {
+				curpos = curpos.left
+			}
+		} else if curpos.key < node.key {
+			if curpos.right == tree.sentinel {
+				curpos.right = node
+				node.parent = curpos
+				break
+			} else {
+				curpos = curpos.right
+			}
+		} else {
+			curpos.data = node.data
+			return node
+		}
+	}
+
+	var uncle *RBTreeNode
+	for node != tree.root && node.color == 'r' && node.parent.color == 'r' {
+		if node.parent == node.parent.parent.left {
+			uncle = node.parent.parent.right
+			if uncle.color == 'r' {
+				node.parent.color = 'b'
+				uncle.color = 'b'
+				node.parent.parent.color = 'r'
+				node = node.parent.parent
+			} else {
+				if node == node.parent.right {
+					node = node.parent
+					tree.LeftRotate(node)
+				}
+				node.parent.color = 'b'
+				node.parent.parent.color = 'r'
+				tree.RightRotate(node.parent.parent)
+			}
+		} else {
+			uncle = node.parent.parent.left
+			if uncle.color == 'r' {
+				node.parent.color = 'b'
+				uncle.color = 'b'
+				node.parent.parent.color = 'r'
+				node = node.parent.parent
+			} else {
+				if node == node.parent.left {
+					node = node.parent
+					tree.RightRotate(node)
+				}
+				node.parent.color = 'b'
+				node.parent.parent.color = 'r'
+				tree.LeftRotate(node.parent.parent)
+			}
+		}
+
+	}
+
+	tree.root.color = 'b'
+
+	return node
+
+}
