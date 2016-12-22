@@ -173,42 +173,43 @@ func (r *Rbtree) rb_insert(key int64, element interface{}) *RBNode {
 		}
 	}
 
-	var uncle *RBTreeNode
-	for node != tree.root && node.color == 'r' && node.parent.color == 'r' {
-		if node.parent == node.parent.parent.left {
-			uncle = node.parent.parent.right
-			if uncle.color == 'r' {
-				node.parent.color = 'b'
-				uncle.color = 'b'
-				node.parent.parent.color = 'r'
-				node = node.parent.parent
-			} else {
-				if node == node.parent.right {
-					node = node.parent
-					tree.LeftRotate(node)
-				}
-				node.parent.color = 'b'
-				node.parent.parent.color = 'r'
-				tree.RightRotate(node.parent.parent)
-			}
-		} else {
-			uncle = node.parent.parent.left
-			if uncle.color == 'r' {
-				node.parent.color = 'b'
-				uncle.color = 'b'
-				node.parent.parent.color = 'r'
-				node = node.parent.parent
-			} else {
-				if node == node.parent.left {
-					node = node.parent
-					tree.RightRotate(node)
-				}
-				node.parent.color = 'b'
-				node.parent.parent.color = 'r'
-				tree.LeftRotate(node.parent.parent)
-			}
-		}
-	}
+	r.rb_insert_fixup(node)
 	tree.root.color = 'b'
 	return node
+}
+
+func (r *Rbtree) rb_insert_fixup(node *RBNode) *RBNode {
+	var uncle *RBNode
+	for node.parent.color == RED {
+		if node.parent == node.parent.parent.left {
+
+			uncle = node.parent.parent.right
+			if uncle.color == RED {
+				node.parent.color = BLACK
+				uncle.color = BLACK
+				node.parent.parent.color = RED
+				node = node.parent.parent
+			} else if node == node.parent.right {
+				node = node.parent
+				r.left_rotate(node)
+			}
+			node.parent.color = BLACK
+			node.parent.parent.color = RED
+			r.right_rotate(node)
+		} else {
+			uncle = node.parent.parent.left
+			if uncle.color == RED {
+				node.parent.color = BLACK
+				uncle.color = BLACK
+				node.parent.parent.color = RED
+				node = node.parent.parent
+			} else if node == node.parent.left {
+				node = node.parent
+				r.right_rotate(node)
+			}
+			node.parent.color = BLACK
+			node.parent.parent.color = RED
+			r.left_rotate(node)
+		}
+	}
 }
