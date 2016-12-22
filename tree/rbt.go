@@ -9,8 +9,11 @@ type Color byte
 
 const RED, BLACK Color = 1, 2
 
+type comparer func(interface{}, interface{}) bool
+
 // red-black node
 type RBNode struct {
+	key     int64
 	element interface{} // data
 	left    *RBNode     // left child
 	right   *RBNode     // right child
@@ -19,6 +22,7 @@ type RBNode struct {
 }
 
 type Rbtree struct {
+	compare  comparer
 	root     *RBNode // root node
 	sentinel *RBNode // a sentry or guard
 }
@@ -103,19 +107,19 @@ func (r *Rbtree) right_rotate(node *RBNode) {
 	node.parent = temp
 }
 
-func (r *Rbtree) rb_insert(element interface{}) *RBNode {
-	var (
-		insertnode RBNode
-		node       = &insertnode
-	)
+func initNode(key int64, element interface{}) *RBNode {
 
-	node.data = element
+	// 新插入节点的颜色应该标记为红色，如果为黑色则不能维护红黑树的性质
+	return &RBNode{key: key, element: element, color: RED}
+}
+
+func (r *Rbtree) rb_insert(key int64, element interface{}) *RBNode {
+
+	node := initNode(key, element)
 
 	// 新增节点的左右子树都是哨兵节点
 	node.left = r.sentinel
 	node.right = r.sentinel
-	// 新插入节点的颜色应该标记为红色，如果为黑色则不能维护红黑树的性质\
-	node.color = RED
 
 	// 插入第一个节点，也就是说这是一种最简单和明了的case
 	if r.root == r.sentinel {
@@ -127,25 +131,43 @@ func (r *Rbtree) rb_insert(element interface{}) *RBNode {
 		return node
 	}
 
-	curpos := tree.root
+	// 当前位置,从root开始遍历，可以在O(logn)时间内完成这个过程
+	curpos := r.root
 	for {
-		if curpos.key > node.key {
-			if curpos.left == tree.sentinel {
+		// 举例子n1 < n2 为真则走左， 为假则走右
+		if r.compare(curpos.key, key) {
+			// 当前的左节点为哨兵
+			if curpos.left == r.sentinel {
+				// 左边节点赋值为node
 				curpos.left = node
+				// 更新的node的双亲节点
 				node.parent = curpos
+				// 结束插入
 				break
 			} else {
+				// 如果左边节点不为空，则往下更新当前节点
 				curpos = curpos.left
 			}
-		} else if curpos.key < node.key {
+		} else {
+			// 说明上面的问题，那就是往右子树方向寻找需要插入的地方
 			if curpos.right == tree.sentinel {
+				// 如果有边节点为空
+				// 这更新当前位置节点的右子树为node
 				curpos.right = node
+				// 更新node的双亲节点为当前位置节点
 				node.parent = curpos
+				// 结束
 				break
 			} else {
+				// 从右边往下更新当前位置节点
 				curpos = curpos.right
 			}
-		} else {
+		}
+
+		// 这一步的意思就是更新某一个节点，当然如果你清楚的知道你要更新的节点，这一段可以抽出去
+
+		if key == curpos.key {
+			// 已存在的节点更新自身的element，然后返回不需要维护红黑树的性质
 			curpos.data = node.data
 			return node
 		}
@@ -186,11 +208,7 @@ func (r *Rbtree) rb_insert(element interface{}) *RBNode {
 				tree.LeftRotate(node.parent.parent)
 			}
 		}
-
 	}
-
 	tree.root.color = 'b'
-
 	return node
-
 }
