@@ -9,7 +9,7 @@ type Color byte
 
 const RED, BLACK Color = 1, 2
 
-type comparer func(interface{}, interface{}) bool
+type comparer2 func(interface{}, interface{}) bool
 
 // red-black node
 type RBNode struct {
@@ -22,7 +22,7 @@ type RBNode struct {
 }
 
 type Rbtree struct {
-	compare  comparer
+	compare  comparer2
 	root     *RBNode // root node
 	sentinel *RBNode // a sentry or guard
 }
@@ -150,7 +150,7 @@ func (r *Rbtree) rb_insert(key int64, element interface{}) *RBNode {
 			}
 		} else {
 			// 说明上面的问题，那就是往右子树方向寻找需要插入的地方
-			if curpos.right == tree.sentinel {
+			if curpos.right == r.sentinel {
 				// 如果有边节点为空
 				// 这更新当前位置节点的右子树为node
 				curpos.right = node
@@ -168,13 +168,13 @@ func (r *Rbtree) rb_insert(key int64, element interface{}) *RBNode {
 
 		if key == curpos.key {
 			// 已存在的节点更新自身的element，然后返回不需要维护红黑树的性质
-			curpos.data = node.data
+			curpos.element = node.element
 			return node
 		}
 	}
 
 	r.rb_insert_fixup(node)
-	tree.root.color = 'b'
+	r.root.color = BLACK
 	return node
 }
 
@@ -217,13 +217,14 @@ func (r *Rbtree) Delete(key int64) {
 	// 寻找需要删除的节点
 	// 然后开始维护这颗红黑树
 	node := r.search(key)
+	// 如果是空树则直接返回
 	if node == nil {
 		return
 	}
 
-	var temp *RBTreeNode
-	var subst *RBTreeNode
-	var w *RBTreeNode
+	var temp *RBNode
+	var subst *RBNode
+	var w *RBNode
 	if node.left == r.sentinel {
 		temp = node.right
 		subst = node
@@ -231,7 +232,7 @@ func (r *Rbtree) Delete(key int64) {
 		temp = node.right
 		subst = node
 	} else {
-		subst = r.Min()
+		subst = r.min()
 		if subst.left != r.sentinel {
 			temp = subst.left
 		} else {
@@ -241,7 +242,7 @@ func (r *Rbtree) Delete(key int64) {
 
 	if subst == r.root {
 		r.root = temp
-		temp.color = 'b'
+		temp.color = BLACK
 
 		node.parent = nil
 		node.left = nil
@@ -294,67 +295,67 @@ func (r *Rbtree) Delete(key int64) {
 	node.left = nil
 	node.right = nil
 
-	if color == 'r' {
+	if color == RED {
 		return
 	}
 
-	for temp != r.root && temp.color == 'b' {
+	for temp != r.root && temp.color == BLACK {
 		if temp == temp.parent.left {
 			w = temp.parent.right
-			if w.color == 'r' {
-				w.color = 'b'
-				temp.parent.color = 'r'
-				r.LeftRotate(temp.parent)
+			if w.color == RED {
+				w.color = BLACK
+				temp.parent.color = RED
+				r.left_rotate(temp.parent)
 				w = temp.parent.right
 			}
 
-			if w.left.color == 'b' && w.right.color == 'b' {
-				w.color = 'r'
+			if w.left.color == BLACK && w.right.color == BLACK {
+				w.color = BLACK
 				temp = temp.parent
 			} else {
-				if w.right.color == 'b' {
-					w.left.color = 'b'
-					w.color = 'r'
-					r.RightRotate(w)
+				if w.right.color == BLACK {
+					w.left.color = BLACK
+					w.color = BLACK
+					r.right_rotate(w)
 					w = temp.parent.right
 				}
 
 				w.color = temp.parent.color
-				temp.parent.color = 'b'
-				w.right.color = 'b'
-				r.LeftRotate(temp.parent)
+				temp.parent.color = BLACK
+				w.right.color = BLACK
+				r.left_rotate(temp.parent)
 				temp = r.root
 			}
 		} else {
 			w = temp.parent.left
-			if w.color == 'r' {
-				w.color = 'b'
-				temp.parent.color = 'r'
-				r.RightRotate(temp.parent)
+			if w.color == RED {
+				w.color = BLACK
+				temp.parent.color = RED
+				r.right_rotate(temp.parent)
 				w = temp.parent.left
 			}
 
-			if w.left.color == 'b' && w.right.color == 'b' {
-				w.color = 'r'
+			if w.left.color == BLACK && w.right.color == BLACK {
+				w.color = RED
 				temp = temp.parent
 			} else {
-				if w.left.color == 'b' {
-					w.right.color = 'b'
+				if w.left.color == BLACK {
+					w.right.color = BLACK
 					w.color = 'r'
-					r.LeftRotate(w)
+					r.left_rotate(w)
 					w = temp.parent.left
 				}
 
 				w.color = temp.parent.color
-				temp.parent.color = 'b'
-				w.left.color = 'b'
-				r.RightRotate(temp.parent)
+				temp.parent.color = BLACK
+				w.left.color = BLACK
+				r.right_rotate(temp.parent)
 				temp = r.root
 			}
 		}
 	}
 
-	temp.color = 'b'
+	temp.color = BLACK
 }
 
 func (r *Rbtree) search(key int64) *RBNode {
@@ -375,5 +376,35 @@ func (r *Rbtree) search(key int64) *RBNode {
 		} else {
 			curpos = curpos.right
 		}
+	}
+}
+
+func (r *Rbtree) min() *RBNode {
+	curpos := r.root
+	for {
+		if curpos.left != r.sentinel {
+			curpos = curpos.left
+		} else {
+			return curpos
+		}
+	}
+}
+
+func (r *Rbtree) max() *RBNode {
+	curpos := r.root
+	for {
+		if curpos.right != r.sentinel {
+			curpos = curpos.right
+		} else {
+			return curpos
+		}
+	}
+}
+
+func (r *Rbtree) IsEmpty() bool {
+	if r.root == r.sentinel {
+		return true
+	} else {
+		return false
 	}
 }
