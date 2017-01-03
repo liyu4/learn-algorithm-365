@@ -178,11 +178,10 @@ func (r *Rbtree) rb_insert(key int64, element interface{}) *RBNode {
 	return node
 }
 
-func (r *Rbtree) rb_insert_fixup(node *RBNode) *RBNode {
+func (r *Rbtree) rb_insert_fixup(node *RBNode) {
 	var uncle *RBNode
 	for node.parent.color == RED {
 		if node.parent == node.parent.parent.left {
-
 			uncle = node.parent.parent.right
 			if uncle.color == RED {
 				node.parent.color = BLACK
@@ -210,6 +209,171 @@ func (r *Rbtree) rb_insert_fixup(node *RBNode) *RBNode {
 			node.parent.color = BLACK
 			node.parent.parent.color = RED
 			r.left_rotate(node)
+		}
+	}
+}
+
+func (r *Rbtree) Delete(key int64) {
+	// 寻找需要删除的节点
+	// 然后开始维护这颗红黑树
+	node := r.search(key)
+	if node == nil {
+		return
+	}
+
+	var temp *RBTreeNode
+	var subst *RBTreeNode
+	var w *RBTreeNode
+	if node.left == r.sentinel {
+		temp = node.right
+		subst = node
+	} else if node.right == r.sentinel {
+		temp = node.right
+		subst = node
+	} else {
+		subst = r.Min()
+		if subst.left != r.sentinel {
+			temp = subst.left
+		} else {
+			temp = subst.right
+		}
+	}
+
+	if subst == r.root {
+		r.root = temp
+		temp.color = 'b'
+
+		node.parent = nil
+		node.left = nil
+		node.right = nil
+
+		return
+	}
+
+	color := subst.color
+
+	if subst == subst.parent.left {
+		subst.parent.left = temp
+	} else {
+		subst.parent.right = temp
+	}
+
+	if subst == node {
+		temp.parent = subst.parent
+	} else {
+		if subst.parent == node {
+			temp.parent = subst
+		} else {
+			temp.parent = subst.parent
+		}
+
+		subst.left = node.left
+		subst.right = node.right
+		subst.parent = node.parent
+		subst.color = node.color
+
+		if node == r.root {
+			r.root = subst
+		} else {
+			if node == node.parent.left {
+				node.parent.left = subst
+			} else {
+				node.parent.right = subst
+			}
+		}
+
+		if subst.left != r.sentinel {
+			subst.left.parent = subst
+		}
+		if subst.right != r.sentinel {
+			subst.right.parent = subst
+		}
+	}
+
+	node.parent = nil
+	node.left = nil
+	node.right = nil
+
+	if color == 'r' {
+		return
+	}
+
+	for temp != r.root && temp.color == 'b' {
+		if temp == temp.parent.left {
+			w = temp.parent.right
+			if w.color == 'r' {
+				w.color = 'b'
+				temp.parent.color = 'r'
+				r.LeftRotate(temp.parent)
+				w = temp.parent.right
+			}
+
+			if w.left.color == 'b' && w.right.color == 'b' {
+				w.color = 'r'
+				temp = temp.parent
+			} else {
+				if w.right.color == 'b' {
+					w.left.color = 'b'
+					w.color = 'r'
+					r.RightRotate(w)
+					w = temp.parent.right
+				}
+
+				w.color = temp.parent.color
+				temp.parent.color = 'b'
+				w.right.color = 'b'
+				r.LeftRotate(temp.parent)
+				temp = r.root
+			}
+		} else {
+			w = temp.parent.left
+			if w.color == 'r' {
+				w.color = 'b'
+				temp.parent.color = 'r'
+				r.RightRotate(temp.parent)
+				w = temp.parent.left
+			}
+
+			if w.left.color == 'b' && w.right.color == 'b' {
+				w.color = 'r'
+				temp = temp.parent
+			} else {
+				if w.left.color == 'b' {
+					w.right.color = 'b'
+					w.color = 'r'
+					r.LeftRotate(w)
+					w = temp.parent.left
+				}
+
+				w.color = temp.parent.color
+				temp.parent.color = 'b'
+				w.left.color = 'b'
+				r.RightRotate(temp.parent)
+				temp = r.root
+			}
+		}
+	}
+
+	temp.color = 'b'
+}
+
+func (r *Rbtree) search(key int64) *RBNode {
+	curpos := r.root
+
+	for {
+		if curpos == nil {
+			return nil
+		}
+
+		if curpos.key == key {
+			return curpos
+		}
+
+		// 举例子n1 < n2 为真则走左， 为假则走右
+		if r.compare(curpos.key, key) {
+			curpos = curpos.left
+		} else {
+			curpos = curpos.right
 		}
 	}
 }
