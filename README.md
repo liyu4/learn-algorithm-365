@@ -10,6 +10,8 @@
 8. Fixed tiny bug in skip list but there are have some bug in random number date: 2016-12-9 in shanghai
 9. The double list has been come true. date: 2016-12-12 in shanghai
 10. The binary search tree has been come true. date 2016-12-15 in shanghai. today is so cold!
+11. The Red-Black search tree has been come true. date 2017-01-04 in shanghai. 
+12. The series of algorithm suspend. Start time again may be in spring. data 2017-01-04 in shanghai
 
 
 ### how to test?
