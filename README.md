@@ -20,9 +20,9 @@ you can test specified file use below command
 go test -v  yourfile.go youfile_test.go
 ```
 
-##contact
+##Contact
 Wechat: convertxy
 
 QQ: 2698380951
 
-Email: liyu7771@gamil.com
+Email: aliasliyu4@gamil.com
