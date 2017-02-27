@@ -9,26 +9,26 @@ type Value struct {
 	Name string
 }
 
-type Node struct {
+type DoubleNode struct {
 	Value
-	prev *Node
-	next *Node
+	prev *DoubleNode
+	next *DoubleNode
 }
 
 type doublelist struct {
-	head *Node
-	tail *Node
+	head *DoubleNode
+	tail *DoubleNode
 }
 
-func (n *Node) Prev() *Node {
+func (n *DoubleNode) Prev() *DoubleNode {
 	return n.prev
 }
 
-func (n *Node) Next() *Node {
+func (n *DoubleNode) Next() *DoubleNode {
 	return n.next
 }
 
-func (d *doublelist) First() *Node {
+func (d *doublelist) First() *DoubleNode {
 	return d.head
 }
 
@@ -37,7 +37,7 @@ func NewDlist() *doublelist {
 }
 
 func (d *doublelist) Insert(v Value) {
-	node := &Node{Value: v}
+	node := &DoubleNode{Value: v}
 
 	if d.head == nil {
 		// 第一个节点数据
@@ -54,10 +54,10 @@ func (d *doublelist) Insert(v Value) {
 	d.tail = node
 }
 
-func (d *doublelist) Search(name string) *Node {
+func (d *doublelist) Search(name string) *DoubleNode {
 	var (
-		found bool  = false
-		ret   *Node = nil
+		found bool        = false
+		ret   *DoubleNode = nil
 	)
 
 	for n := d.First(); n != nil && !found; n = n.next {
