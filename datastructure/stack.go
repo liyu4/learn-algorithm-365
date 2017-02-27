@@ -9,7 +9,7 @@ type stack struct {
 	arr []int
 }
 
-func New() *stack {
+func NewStack() *stack {
 	return &stack{}
 }
 
