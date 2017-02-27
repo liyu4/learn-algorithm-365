@@ -5,19 +5,21 @@ import (
 )
 
 func TestStack(t *testing.T) {
-	stack := New()
+	stack := NewStack()
 
-	if stack.empty() {
-		t.Log("stack is empty")
+	if !stack.empty() {
+		t.Fatal("stack should not be empty")
 	}
+
 	stack.push(1)
 	stack.push(2000)
 
-	if top, err := stack.pop(); err != nil {
-		t.Log(err)
-	} else {
-		t.Log(top)
+	top, err := stack.pop()
+	if err != nil {
+		t.Fatalf("Pop failed %s", err.Error())
 	}
 
-	t.Log(stack)
+	if top != 2000 {
+		t.Fatalf("Pop got %s instead of 2000", top)
+	}
 }
