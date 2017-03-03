@@ -1,66 +1,69 @@
 // dijkstra implement of dijkstra's algorithm
 // which is an algorithm for finding the shortest paths between nodes in a graph.
 
-package dijkstra
+package shortestpath
 
 import (
 	"fmt"
 )
 
 const (
-	num = 10
+	num = 6
 )
 
 var (
 	element  [num][num]int
 	distance [num]int
 	book     [num]int
-	infnity  = 99999999
+	infinity = 99999999
 
 	vertex int
 	side   int
 
-	sideone   int
-	sidetwo   int
-	sidethree int
+	vertexone    int
+	vertextwo    int
+	lineDistance int
 )
 
-func dijkastra() {
+func dijkstra() {
 	// Input numbers of vertex and side
 	fmt.Scan(&vertex, &side)
 
 	// initialize two demensions array
 	for i := 0; i < vertex; i++ {
-		for j := 0; j < side; j++ {
+		for j := 0; j < vertex; j++ {
 			if i == j {
 				element[i][j] = 0
 			} else {
-				element[i][j] = infnity
+				element[i][j] = infinity
 			}
 		}
 	}
 
-	// Read sides
+	//  Read sides
 	for i := 0; i < side; i++ {
-		fmt.Scan(&sideone, &sidetwo, &sidethree)
+		fmt.Scan(&vertexone, &vertextwo, &lineDistance)
+		element[vertexone][vertextwo] = lineDistance
 	}
 
 	// Initialize element array, from first vertex to other vertexs
 	for i := 0; i < vertex; i++ {
-		distance[i] = element[1][i]
+		distance[i] = element[0][i]
 	}
 
 	for i := 0; i < vertex; i++ {
 		book[i] = 0
 	}
 
-	book[1] = 1
+	// firsr vertex
+	book[0] = 1
 
 	var u, v int
-	for i := 1; i < vertex-1; i++ {
-		min := infnity
+	for i := 0; i < vertex; i++ {
+		min := infinity
 
-		for j := 1; j <= vertex; j++ {
+		// Search the min value in distance array
+		for j := 0; j < vertex; j++ {
 			if book[j] == 0 && distance[j] < min {
 				min = distance[j]
 				u = j
@@ -68,8 +71,8 @@ func dijkastra() {
 		}
 
 		book[u] = 1
-		for v = 1; v <= vertex; v++ {
-			if element[u][v] < infnity {
+		for v = 0; v < vertex; v++ {
+			if element[u][v] < infinity {
 				if distance[v] > distance[u]+element[u][v] {
 					distance[v] = distance[u] + element[u][v]
 				}
@@ -82,15 +85,14 @@ func dijkastra() {
 	}
 }
 
-// test datas
-
-// 6 9
-// 1 2 1
-// 1 3 12
-// 2 3 9
-// 2 4 3
-// 3 5 5
-// 4 3 4
-// 4 5 13
-// 4 6 15
-// 5 6 4
+//    test datas
+//    6 9
+//    0 1 1
+//    0 2 12
+//    1 2 9
+//    1 3 3
+//    2 4 5
+//    3 2 4
+//    3 4 13
+//    3 5 15
+//    4 5 4
