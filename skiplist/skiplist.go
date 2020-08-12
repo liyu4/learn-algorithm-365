@@ -1,4 +1,4 @@
-//package skiplist provide skip list that is a data structure that allows fast search within an ordered
+//Package skiplist provide skip list that is a data structure that allows fast search within an ordered
 //sequence of element
 package skiplist
 
@@ -156,22 +156,22 @@ func delete(l *listStructure, key int) bool {
 		update[k] = p
 	}
 
-	if q != nil && q.key == key {
-		for k = 0; k <= m && update[k].forward[k] == q; k++ {
-			// 从底层开始维护新的关系
-			p = update[k]
-			//  维护链表的方向关系
-			p.forward[k] = q.forward[k]
-		}
-
-		// 如果删除的是最高层的，跳表的高度也开始跟着调整
-		for l.header.forward[m] == nil && m > 0 {
-			m--
-		}
-
-		l.level = m
-		return true
-	} else {
+	if q == nil && q.key != key {
 		return false
 	}
+
+	for k = 0; k <= m && update[k].forward[k] == q; k++ {
+		// 从底层开始维护新的关系
+		p = update[k]
+		//  维护链表的方向关系
+		p.forward[k] = q.forward[k]
+	}
+
+	// 如果删除的是最高层的，跳表的高度也开始跟着调整
+	for l.header.forward[m] == nil && m > 0 {
+		m--
+	}
+
+	l.level = m
+	return true
 }
